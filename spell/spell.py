@@ -43,7 +43,7 @@ class LogParser:
         savePath : the path of the output file
         tau : how much percentage of tokens matched to merge a log message
     """
-    def __init__(self, indir='./', outdir='./result/', log_format=None, tau=0.5, rex=[], keep_para=True, vm_id='', text_max_length=4096):
+    def __init__(self, indir='./', outdir='./result/', log_format=None, tau=0.5, keep_para=True, vm_id='', text_max_length=4096):
         self.path = indir
         self.logname = None
         self.logmain = None
@@ -51,7 +51,6 @@ class LogParser:
         self.tau = tau
         self.logformat = log_format
         self.df_log = None
-        self.rex = rex
         self.keep_para = keep_para
         self.lastestLineId = 0
         self.vm_id = vm_id
@@ -231,7 +230,7 @@ class LogParser:
         count = 0
         for idx, line in self.df_log.iterrows():
             logID = line['LineId']
-            logmessageL = list(filter(lambda x: x != '', re.split(r'[\s=:,]', self.preprocess(line['Content']))))
+            logmessageL = list(filter(lambda x: x != '', re.split(r'[\s=:,]', line['Content'])))
             constLogMessL = [w for w in logmessageL if w != '<*>']
 
             # Find an existing matched log cluster
@@ -315,11 +314,6 @@ class LogParser:
     def load_data(self):
         headers, regex = self.generate_logformat_regex(self.logformat)
         self.df_log = self.log_to_dataframe(os.path.join(self.path, self.logname), regex, headers, self.logformat)
-
-    def preprocess(self, line):
-        for currentRex in self.rex:
-            line = re.sub(currentRex, '<*>', line)
-        return line
 
     def log_to_dataframe(self, log_file, regex, headers, logformat):
         """ Function to transform log file to dataframe

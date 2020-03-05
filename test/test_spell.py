@@ -3,7 +3,7 @@ import re
 import os
 import pandas as pd
 from pandas.util.testing import assert_frame_equal
-from spell.spell import LogParser
+from spell.spell import LogParser, LCSObject, Node
 
 THIS_DIR = os.path.dirname(os.path.abspath(__file__))
 LOG_FORMAT = '<Date> <Time> <Pid> <Level> <Component>: <Content>'
@@ -52,6 +52,28 @@ class TestLogParser(unittest.TestCase):
         self.parser.logname = 'test_data.log'
         self.parser.load_data()
         assert_frame_equal(self.parser.df_log, DF_MOCK)
+
+    def test_addSeqToPrefixTree(self):
+        logmessageL = ['Receiving', 'block', 'blk_-1608999687919862906', 'src', '/10.250.19.102', '54106', 'dest', '/10.250.19.102', '50010']
+        logID = 0
+
+        rootNode = Node()
+        newCluster = LCSObject(logTemplate=logmessageL, logIDL=[logID])
+
+        self.parser.addSeqToPrefixTree(rootNode, newCluster)
+        res = helper(rootNode)
+        self.assertEqual(res, logmessageL)
+
+
+def helper(rootNode):
+    if rootNode.childD == dict():
+        return []
+
+    res = []
+    for k in rootNode.childD.keys():
+        res.append(k)
+        res += helper(rootNode.childD[k])
+    return res
 
 
 if __name__ == '__main__':
