@@ -313,11 +313,8 @@ class LogParser:
             df_event.to_csv(os.path.join(self.savePath, self.logmain + '_templates.csv'), index=False)
 
     def load_data(self):
-        print('Start load_data')
         headers, regex = self.generate_logformat_regex(self.logformat)
-        print('generate_logformat_regex finished!')
         self.df_log = self.log_to_dataframe(os.path.join(self.path, self.logname), regex, headers, self.logformat)
-        print('log_to_dataframe finished!')
 
     def preprocess(self, line):
         for currentRex in self.rex:
@@ -349,10 +346,10 @@ class LogParser:
                     logging.error(e)
                     pass
                 signal.alarm(0)
-        logdf = pd.DataFrame(log_messages, columns=headers)
-        logdf.insert(0, 'LineId', None)
-        logdf['LineId'] = [i + 1 for i in range(linecount)]
-        return logdf
+        df_log = pd.DataFrame(log_messages, columns=headers)
+        df_log.insert(0, 'LineId', None)
+        df_log['LineId'] = [i + 1 for i in range(linecount)]
+        return df_log
 
     def generate_logformat_regex(self, logformat):
         """ Function to generate regular expression to split log messages
