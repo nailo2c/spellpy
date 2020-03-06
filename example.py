@@ -10,7 +10,7 @@ if __name__ == '__main__':
     tau = 0.5
 
     parser = LogParser(indir=input_dir, outdir=output_dir, log_format=log_format,
-                    tau=tau, vm_id='', logmain='HDFS')
+                       tau=tau, vm_id='', logmain='HDFS')
 
     if not os.path.exists(output_dir):
         os.makedirs(output_dir)

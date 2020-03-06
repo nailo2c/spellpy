@@ -14,7 +14,7 @@ After executing the line above, the `result` folder will be created and you will
 
 &nbsp;
 
-`*_main_structured.csv`
++ `*_main_structured.csv`
 
 | ... | Level | Component                    | Content                                                                                       | EventId  | EventTemplate                                                       | ParameterList                              |
 |-----|-------|------------------------------|-----------------------------------------------------------------------------------------------|----------|---------------------------------------------------------------------|--------------------------------------------|
@@ -24,7 +24,7 @@ After executing the line above, the `result` folder will be created and you will
 
 &nbsp;
 
-`*_main_templates.csv`
++ `*_main_templates.csv`
 
 | EventId  | EventTemplate                                  | Occurrences |
 |----------|------------------------------------------------|-------------|
