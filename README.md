@@ -13,6 +13,7 @@ python example.py
 After executing the line above, the `result` folder will be created and you will see two files: `structured.csv` and `templates.csv`.
 
 &nbsp;
+
 `*_main_structured.csv`
 
 | ... | Level | Component                    | Content                                                                                       | EventId  | EventTemplate                                                       | ParameterList                              |
@@ -22,6 +23,7 @@ After executing the line above, the `result` folder will be created and you will
 | ... | INFO  | dfs.DataNode$DataXceiver     | Receiving block blk_-1608999687919862906 src: /10.250.10.6:40524 dest: /10.250.10.6:50010     | f57d69cf | Receiving block blk_-1608999687919862906 src <*> <*> dest <*> 50010 | ['/10.250.10.6:40524', '/10.250.10.6']     |
 
 &nbsp;
+
 `*_main_templates.csv`
 
 | EventId  | EventTemplate                                  | Occurrences |
@@ -31,6 +33,7 @@ After executing the line above, the `result` folder will be created and you will
 | dc2c74b7 | PacketResponder <*> for block <*> terminating  | 4           |
 
 &nbsp;
+
 As you see, there have three test log files. Use for loop to simulate (nearly) streaming situation.
 
 In the `result` folder, there are `_main_*.csv` files and `*.log_*.csv` files. The `_main_*.csv` files will keep appending the new coming log when it has been parse.
