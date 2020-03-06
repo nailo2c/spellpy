@@ -64,6 +64,14 @@ class TestLogParser(unittest.TestCase):
         res = helper(rootNode)
         self.assertEqual(res, logmessageL)
 
+    def test_LCS(self):
+        seq1 = ['Receiving', 'block', 'blk_-1608999687919862906', 'src', '/10.250.10.6', '40524', 'dest', '/10.250.10.6', '50010']
+        seq2 = ['Receiving', 'block', 'blk_-1608999687919862906', 'src', '/10.250.19.102', '54106', 'dest', '/10.250.19.102', '50010']
+        expected_lcs = ['Receiving', 'block', 'blk_-1608999687919862906', 'src', 'dest', '50010']
+
+        lcs = self.parser.LCS(seq1, seq2)
+        self.assertListEqual(lcs, expected_lcs)
+
 
 def helper(rootNode):
     if rootNode.childD == dict():
