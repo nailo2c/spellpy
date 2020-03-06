@@ -63,7 +63,6 @@ sh test.sh
 | test/test_spell.py | 55    | 1    | 98%   |
 | TOTAL              | 375   | 208  | 45%   |
 
-
 ## TODO
 
 - [ ] Refactor `spell.py`
