@@ -1,0 +1,5 @@
+081109 203521 145 INFO dfs.DataNode$PacketResponder: PacketResponder 1 for block blk_7503483334202473044 terminating
+081109 203521 145 INFO dfs.DataNode$PacketResponder: Received block blk_7503483334202473044 of size 233217 from /10.251.215.16
+081109 203521 146 INFO dfs.DataNode$PacketResponder: PacketResponder 0 for block blk_7503483334202473044 terminating
+081109 203521 146 INFO dfs.DataNode$PacketResponder: Received block blk_7503483334202473044 of size 233217 from /10.251.71.16
+081109 203521 147 INFO dfs.DataNode$DataTransfer: 10.250.14.224:50010:Transmitted block blk_-1608999687919862906 to /10.251.215.16:50010

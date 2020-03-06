@@ -43,10 +43,10 @@ class LogParser:
         savePath : the path of the output file
         tau : how much percentage of tokens matched to merge a log message
     """
-    def __init__(self, indir='./', outdir='./result/', log_format=None, tau=0.5, keep_para=True, vm_id='', text_max_length=4096):
+    def __init__(self, indir='./', outdir='./result/', log_format=None, tau=0.5, keep_para=True, vm_id='', text_max_length=4096, logmain=None):
         self.path = indir
         self.logname = None
-        self.logmain = None
+        self.logmain = logmain
         self.savePath = outdir
         self.tau = tau
         self.logformat = log_format
@@ -182,22 +182,6 @@ class LogParser:
                     matchedNode.templateNo -= 1
                     parentn = matchedNode
 
-    def printTree(self, node, dep):
-        pStr = ''
-        for i in range(dep):
-            pStr += '  '
-
-        if node.token == '':
-            pStr += 'Root'
-        else:
-            pStr += node.token
-            if node.logClust is not None:
-                pStr += '-->' + ' '.join(node.logClust.logTemplate)
-        print(pStr + ' (' + str(node.templateNo) + ')')
-
-        for child in node.childD:
-            self.printTree(node.childD[child], dep + 1)
-
     def parse(self, logname):
         starttime = datetime.now()
         print('Parsing file: ' + os.path.join(self.path, logname))
@@ -270,6 +254,9 @@ class LogParser:
 
         self.outputResult(logCluL)
 
+        if self.logmain:
+            self.appendResult(logCluL)
+
         print(f'rootNodePath: {rootNodePath}')
         with open(rootNodePath, 'wb') as output:
             pickle.dump(rootNode, output, pickle.HIGHEST_PROTOCOL)
@@ -307,9 +294,10 @@ class LogParser:
 
         # output Main file
         if self.logmain:
-            print('Output main file for append')
-            self.df_log.to_csv(os.path.join(self.savePath, self.logmain + '_structured.csv'), index=False)
-            df_event.to_csv(os.path.join(self.savePath, self.logmain + '_templates.csv'), index=False)
+            if not os.path.exists(os.path.join(self.savePath, self.logmain + '_main_structured.csv')):
+                print('Output main file for append')
+                self.df_log.to_csv(os.path.join(self.savePath, self.logmain + '_main_structured.csv'), index=False)
+                df_event.to_csv(os.path.join(self.savePath, self.logmain + '_main_templates.csv'), index=False)
 
     def load_data(self):
         headers, regex = self.generate_logformat_regex(self.logformat)
@@ -395,3 +383,35 @@ class LogParser:
     def _log_to_dataframe_handler(self, signum, frame):
         print('log_to_dataframe function is hangs')
         raise Exception("TIME OUT!")
+
+    def appendResult(self, logClustL):
+        main_structured_path = os.path.join(self.savePath, self.logmain+'_main_structured.csv')
+        df_log_main_structured = pd.read_csv(main_structured_path)
+        lastestLineId = df_log_main_structured['LineId'].max()
+        print(f'lastestLindId: {lastestLineId}')
+
+        templates = [0] * self.df_log.shape[0]
+        ids = [0] * self.df_log.shape[0]
+        df_event = []
+
+        for logclust in logClustL:
+            template_str = ' '.join(logclust.logTemplate)
+            eid = hashlib.md5(template_str.encode('utf-8')).hexdigest()[0:8]
+            for logid in logclust.logIDL:
+                if logid <= lastestLineId:
+                    continue
+                templates[logid - lastestLineId - 1] = template_str
+                ids[logid - lastestLineId - 1] = eid
+            df_event.append([eid, template_str, len(logclust.logIDL)])
+
+        df_event = pd.DataFrame(df_event, columns=['EventId', 'EventTemplate', 'Occurrences'])
+
+        self.df_log['EventId'] = ids
+        self.df_log['EventTemplate'] = templates
+        if self.keep_para:
+            self.df_log['ParameterList'] = self.df_log.apply(self.get_parameter_list, axis=1)
+
+        df_log_append = pd.concat([df_log_main_structured, self.df_log])
+        df_log_append = df_log_append[df_log_append['EventId'] != 0]
+        df_log_append.to_csv(main_structured_path, index=False)
+        df_event.to_csv(os.path.join(self.savePath, self.logmain + '_main_templates.csv'), index=False)

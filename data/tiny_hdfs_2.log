@@ -1,0 +1,4 @@
+081109 203520 142 INFO dfs.DataNode$DataXceiver: Receiving block blk_7503483334202473044 src: /10.251.215.16:55695 dest: /10.251.215.16:50010
+081109 203520 145 INFO dfs.DataNode$DataXceiver: Receiving block blk_7503483334202473044 src: /10.250.19.102:34232 dest: /10.250.19.102:50010
+081109 203520 26 INFO dfs.FSNamesystem: BLOCK* NameSystem.allocateBlock: /mnt/hadoop/mapred/system/job_200811092030_0001/job.split. blk_7503483334202473044
+081109 203521 143 INFO dfs.DataNode$DataXceiver: Received block blk_-1608999687919862906 src: /10.251.215.16:52002 dest: /10.251.215.16:50010 of size 91178
