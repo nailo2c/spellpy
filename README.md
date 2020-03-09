@@ -50,7 +50,7 @@ python plot_tree.py
 
 ![tree](plot/tree.gv.png)
 
-## Test
+## Tests
 
 ```sh
 sh test.sh
