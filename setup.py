@@ -5,7 +5,7 @@ with open("README.md", "r") as fh:
 
 setuptools.setup(
     name="spellpy",
-    version="0.0.1",
+    version="0.0.2",
     author="nailo2c",
     author_email="nailo2c@gmail.com",
     description="Auto parser for system raw log without human guidance",
