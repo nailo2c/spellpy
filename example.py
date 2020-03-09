@@ -1,6 +1,6 @@
 import os
 from glob import glob
-from spell.spell import LogParser
+from pyspell.spell import LogParser
 
 
 if __name__ == '__main__':
