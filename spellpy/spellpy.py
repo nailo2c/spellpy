@@ -184,10 +184,10 @@ class LogParser:
 
     def parse(self, logname):
         starttime = datetime.now()
-        print('Parsing file: ' + os.path.join(self.path, logname))
+        logging.info('Parsing file: ' + os.path.join(self.path, logname))
         self.logname = logname
         self.load_data()
-        print('load_data() finished!')
+        logging.info('load_data() finished!')
 
         rootNodePath = os.path.join(self.savePath, 'rootNode.pkl')
         logCluLPath = os.path.join(self.savePath, 'logCluL.pkl')
@@ -201,18 +201,18 @@ class LogParser:
             for logclust in logCluL:
                 if max(logclust.logIDL) > self.lastestLineId:
                     self.lastestLineId = max(logclust.logIDL)
-            print(f'Load objects done, lastestLineId: {self.lastestLineId}')
+            logging.info(f'Load objects done, lastestLineId: {self.lastestLineId}')
         else:
             rootNode = Node()
             logCluL = []
             self.lastestLineId = 0
 
         self.df_log['LineId'] = self.df_log['LineId'].apply(lambda x: x + self.lastestLineId)
-        print('vm_id:', self.vm_id)
+        logging.info(f'vm_id: {self.vm_id}')
         self.df_log['VMId'] = self.vm_id
 
         count = 0
-        for idx, line in self.df_log.iterrows():
+        for _, line in self.df_log.iterrows():
             logID = line['LineId']
             logmessageL = list(filter(lambda x: x != '', re.split(r'[\s=:,]', line['Content'])))
             constLogMessL = [w for w in logmessageL if w != '<*>']
@@ -247,7 +247,7 @@ class LogParser:
                         break
             count += 1
             if count % 1000 == 0 or count == len(self.df_log):
-                print('Processed {0:.1f}% of log lines.'.format(count * 100.0 / len(self.df_log)))
+                logging.info('Processed {0:.1f}% of log lines.'.format(count * 100.0 / len(self.df_log)))
 
         if not os.path.exists(self.savePath):
             os.makedirs(self.savePath)
@@ -257,15 +257,15 @@ class LogParser:
         if self.logmain:
             self.appendResult(logCluL)
 
-        print(f'rootNodePath: {rootNodePath}')
+        logging.info(f'rootNodePath: {rootNodePath}')
         with open(rootNodePath, 'wb') as output:
             pickle.dump(rootNode, output, pickle.HIGHEST_PROTOCOL)
-        print(f'logCluLPath: {logCluLPath}')
+        logging.info(f'logCluLPath: {logCluLPath}')
         with open(logCluLPath, 'wb') as output:
             pickle.dump(logCluL, output, pickle.HIGHEST_PROTOCOL)
-        print('Store objects done.')
+        logging.info('Store objects done.')
 
-        print('Parsing done. [Time taken: {!s}]'.format(datetime.now() - starttime))
+        logging.info('Parsing done. [Time taken: {!s}]'.format(datetime.now() - starttime))
 
     def outputResult(self, logClustL):
         templates = [0] * self.df_log.shape[0]
@@ -288,14 +288,14 @@ class LogParser:
         self.df_log['EventTemplate'] = templates
         if self.keep_para:
             self.df_log["ParameterList"] = self.df_log.apply(self.get_parameter_list, axis=1)
-        print('Output parse file')
+        logging.info('Output parse file')
         self.df_log.to_csv(os.path.join(self.savePath, self.logname + '_structured.csv'), index=False)
         df_event.to_csv(os.path.join(self.savePath, self.logname + '_templates.csv'), index=False)
 
         # output Main file
         if self.logmain:
             if not os.path.exists(os.path.join(self.savePath, self.logmain + '_main_structured.csv')):
-                print('Output main file for append')
+                logging.info('Output main file for append')
                 self.df_log.to_csv(os.path.join(self.savePath, self.logmain + '_main_structured.csv'), index=False)
                 df_event.to_csv(os.path.join(self.savePath, self.logmain + '_main_templates.csv'), index=False)
 
@@ -309,6 +309,8 @@ class LogParser:
         log_messages = []
         linecount = 0
         with open(log_file, 'r') as fin:
+            total_line = len(fin.readlines())
+
             for line in fin.readlines():
                 if len(line) > self.text_max_length:
                     logging.error('Length of log string is too long')
@@ -321,12 +323,13 @@ class LogParser:
                     match = regex.search(line.strip())
                     message = [match.group(header) for header in headers]
                     log_messages.append(message)
-                    linecount += 1
-                    if linecount % 5000 == 0:
-                        print(f'Loaded {linecount} of log lines.')
                 except Exception as e:
-                    logging.error(e)
+                    _ = e
+                    # logging.error(e)
                     pass
+                linecount += 1
+                if linecount % 5000 == 0 or linecount == total_line:
+                    logging.info('Loaded {0:1.f}% of log lines.'.format(linecount*100/total_line))
                 signal.alarm(0)
         df_log = pd.DataFrame(log_messages, columns=headers)
         df_log.insert(0, 'LineId', None)
@@ -364,7 +367,7 @@ class LogParser:
         try:
             parameter_list = self._get_parameter_list(row, template_regex)
         except Exception as e:
-            print(e)
+            logging.error(e)
             parameter_list = ["TIMEOUT"]
         signal.alarm(0)
         return parameter_list
@@ -377,18 +380,18 @@ class LogParser:
         return parameter_list
 
     def _parameter_handler(self, signum, frame):
-        print("_get_parameter_list function is hangs!")
+        logging.error("_get_parameter_list function is hangs!")
         raise Exception("TIME OUT!")
 
     def _log_to_dataframe_handler(self, signum, frame):
-        print('log_to_dataframe function is hangs')
+        logging.error('log_to_dataframe function is hangs')
         raise Exception("TIME OUT!")
 
     def appendResult(self, logClustL):
         main_structured_path = os.path.join(self.savePath, self.logmain+'_main_structured.csv')
         df_log_main_structured = pd.read_csv(main_structured_path)
         lastestLineId = df_log_main_structured['LineId'].max()
-        print(f'lastestLindId: {lastestLineId}')
+        logging.info(f'lastestLindId: {lastestLineId}')
 
         templates = [0] * self.df_log.shape[0]
         ids = [0] * self.df_log.shape[0]
