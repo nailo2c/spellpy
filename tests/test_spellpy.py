@@ -72,6 +72,19 @@ class TestLogParser(unittest.TestCase):
         lcs = self.parser.LCS(seq1, seq2)
         self.assertListEqual(lcs, expected_lcs)
 
+    def test_LCSMatch(self):
+        seq1 = ['Receiving', 'block', 'blk_-1608999687919862906', 'src', '/10.250.10.6', '40524', 'dest', '/10.250.10.6', '50010']
+        seq2 = ['Just', 'A', 'Test']
+        logmessageL = ['Receiving', 'block', 'blk_-1608999687919862906', 'src', '/10.250.19.102', '54106', 'dest', '/10.250.19.102', '50010']
+        logID = 0
+        newCluster = LCSObject(logTemplate=logmessageL, logIDL=[logID])
+
+        retLogClust = self.parser.LCSMatch([newCluster], seq1)
+        self.assertListEqual(retLogClust.logTemplate, newCluster.logTemplate)
+
+        ret = self.parser.LCSMatch([newCluster], seq2)
+        self.assertEqual(ret, None)
+
 
 def helper(rootNode):
     if rootNode.childD == dict():
