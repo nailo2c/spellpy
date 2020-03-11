@@ -9,7 +9,7 @@ from datetime import datetime
 import string
 import logging
 
-logging.basicConfig(level=logging.INFO,
+logging.basicConfig(level='INFO',
                     format='[%(asctime)s][%(levelname)s]: %(message)s')
 
 
@@ -311,6 +311,7 @@ class LogParser:
         with open(log_file, 'r') as fin:
             total_line = len(fin.readlines())
 
+        with open(log_file, 'r') as fin:
             for line in fin.readlines():
                 if len(line) > self.text_max_length:
                     logging.error('Length of log string is too long')
@@ -329,7 +330,7 @@ class LogParser:
                     pass
                 linecount += 1
                 if linecount % 5000 == 0 or linecount == total_line:
-                    logging.info('Loaded {0:1.f}% of log lines.'.format(linecount*100/total_line))
+                    logging.info('Loaded {0:.1}% of log lines.'.format(linecount*100/total_line))
                 signal.alarm(0)
         df_log = pd.DataFrame(log_messages, columns=headers)
         df_log.insert(0, 'LineId', None)
