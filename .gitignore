@@ -3,6 +3,7 @@ __pycache__/
 .DS_Store
 *.xml
 .coverage
+result/
 
 # Distribution / packaging
 .Python

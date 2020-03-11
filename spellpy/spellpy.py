@@ -43,7 +43,7 @@ class LogParser:
         savePath : the path of the output file
         tau : how much percentage of tokens matched to merge a log message
     """
-    def __init__(self, indir='./', outdir='./result/', log_format=None, tau=0.5, keep_para=True, vm_id='', text_max_length=4096, logmain=None):
+    def __init__(self, indir='./', outdir='./result/', log_format=None, tau=0.5, keep_para=True, text_max_length=4096, logmain=None):
         self.path = indir
         self.logname = None
         self.logmain = logmain
@@ -53,7 +53,6 @@ class LogParser:
         self.df_log = None
         self.keep_para = keep_para
         self.lastestLineId = 0
-        self.vm_id = vm_id
         self.text_max_length = text_max_length
 
     def LCS(self, seq1, seq2):
@@ -208,8 +207,6 @@ class LogParser:
             self.lastestLineId = 0
 
         self.df_log['LineId'] = self.df_log['LineId'].apply(lambda x: x + self.lastestLineId)
-        logging.info(f'vm_id: {self.vm_id}')
-        self.df_log['VMId'] = self.vm_id
 
         count = 0
         for _, line in self.df_log.iterrows():
@@ -246,7 +243,7 @@ class LogParser:
                         logCluL[i].logIDL.append(logID)
                         break
             count += 1
-            if count % 1000 == 0 or count == len(self.df_log):
+            if count % 10000 == 0 or count == len(self.df_log):
                 logging.info('Processed {0:.1f}% of log lines.'.format(count * 100.0 / len(self.df_log)))
 
         if not os.path.exists(self.savePath):
@@ -280,9 +277,9 @@ class LogParser:
                     continue
                 templates[logid - self.lastestLineId - 1] = template_str
                 ids[logid - self.lastestLineId - 1] = eid
-            df_event.append([eid, template_str, len(logclust.logIDL)])#, logclust.logIDL])
+            df_event.append([eid, template_str, len(logclust.logIDL)])
 
-        df_event = pd.DataFrame(df_event, columns=['EventId', 'EventTemplate', 'Occurrences'])#, 'lineIds'])
+        df_event = pd.DataFrame(df_event, columns=['EventId', 'EventTemplate', 'Occurrences'])
 
         self.df_log['EventId'] = ids
         self.df_log['EventTemplate'] = templates
@@ -324,13 +321,12 @@ class LogParser:
                     match = regex.search(line.strip())
                     message = [match.group(header) for header in headers]
                     log_messages.append(message)
+                    linecount += 1
+                    if linecount % 10000 == 0 or linecount == total_line:
+                        logging.info('Loaded {0:.1f}% of log lines.'.format(linecount*100/total_line))
                 except Exception as e:
                     _ = e
-                    # logging.error(e)
                     pass
-                linecount += 1
-                if linecount % 5000 == 0 or linecount == total_line:
-                    logging.info('Loaded {0:.1}% of log lines.'.format(linecount*100/total_line))
                 signal.alarm(0)
         df_log = pd.DataFrame(log_messages, columns=headers)
         df_log.insert(0, 'LineId', None)
