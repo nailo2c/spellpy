@@ -9,7 +9,7 @@ from datetime import datetime
 import string
 import logging
 
-logging.basicConfig(level='INFO',
+logging.basicConfig(level=logging.INFO,
                     format='[%(asctime)s][%(levelname)s]: %(message)s')
 
 
@@ -106,27 +106,27 @@ class LogParser:
 
         return retLogClust
 
-    def LCSMatch(self, logClustL, seq):
-        retLogClust = None
+    def LCSMatch(self, LCSMap, seq):
+        retLCSObject = None
 
         maxLen = -1
-        maxClust = None
+        maxLCSObject = None
         set_seq = set(seq)
         size_seq = len(seq)
-        for logClust in logClustL:
-            set_template = set(logClust.logTemplate)
+        for LCSObject in LCSMap:
+            set_template = set(LCSObject.logTemplate)
             if len(set_seq & set_template) < 0.5 * size_seq:
                 continue
-            lcs = self.LCS(seq, logClust.logTemplate)
-            if len(lcs) > maxLen or (len(lcs) == maxLen and len(logClust.logTemplate) < len(maxClust.logTemplate)):
+            lcs = self.LCS(seq, LCSObject.logTemplate)
+            if len(lcs) > maxLen or (len(lcs) == maxLen and len(LCSObject.logTemplate) < len(maxClust.logTemplate)):
                 maxLen = len(lcs)
-                maxClust = logClust
+                maxLCSObject = LCSObject
 
         # LCS should be large then tau * len(itself)
         if float(maxLen) >= self.tau * size_seq:
-            retLogClust = maxClust
+            retLCSObject = maxLCSObject
 
-        return retLogClust
+        return retLCSObject
 
     def getTemplate(self, lcs, seq):
         retVal = []
@@ -237,7 +237,6 @@ class LogParser:
                             matchCluster.logTemplate = newTemplate
                             self.addSeqToPrefixTree(rootNode, matchCluster)
             if matchCluster:
-                # matchCluster.logIDL.append(logID)
                 for i in range(len(logCluL)):
                     if matchCluster.logTemplate == logCluL[i].logTemplate:
                         logCluL[i].logIDL.append(logID)
