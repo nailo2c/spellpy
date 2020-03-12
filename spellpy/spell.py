@@ -118,7 +118,7 @@ class LogParser:
             if len(set_seq & set_template) < 0.5 * size_seq:
                 continue
             lcs = self.LCS(seq, LCSObject.logTemplate)
-            if len(lcs) > maxLen or (len(lcs) == maxLen and len(LCSObject.logTemplate) < len(maxClust.logTemplate)):
+            if len(lcs) > maxLen or (len(lcs) == maxLen and len(LCSObject.logTemplate) < len(maxLCSObject.logTemplate)):
                 maxLen = len(lcs)
                 maxLCSObject = LCSObject
 

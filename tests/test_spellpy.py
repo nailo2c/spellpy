@@ -3,7 +3,7 @@ import re
 import os
 import pandas as pd
 from pandas.util.testing import assert_frame_equal
-from spellpy.spellpy import LogParser, LCSObject, Node
+from spellpy.spell import LogParser, LCSObject, Node
 
 THIS_DIR = os.path.dirname(os.path.abspath(__file__))
 LOG_FORMAT = '<Date> <Time> <Pid> <Level> <Component>: <Content>'
@@ -22,6 +22,7 @@ mock = {
     ],
 }
 DF_MOCK = pd.DataFrame(mock)
+
 
 class TestLogParser(unittest.TestCase):
     def setUp(self):
