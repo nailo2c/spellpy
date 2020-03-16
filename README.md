@@ -4,6 +4,12 @@ Use python implement [the paper](https://www.cs.utah.edu/~lifeifei/papers/spell.
 
 This implement is refactored and enhancement version of logpai's [logparser](https://github.com/logpai/logparser).
 
+## Install
+
+```bash
+pip install spellpy
+```
+
 ## Getting Started
 
 ```python
