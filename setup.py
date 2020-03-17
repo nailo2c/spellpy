@@ -5,13 +5,13 @@ with open("README.md", "r") as fh:
 
 setuptools.setup(
     name="spellpy",
-    version="0.0.7",
+    version="0.0.8",
     author="nailo2c",
     author_email="nailo2c@gmail.com",
     description="Auto parser for system raw log without human guidance",
     long_description=long_description,
     long_description_content_type="text/markdown",
-    url="https://github.com/nailo2c/pyspell",
+    url="https://github.com/nailo2c/spellpy",
     packages=setuptools.find_packages(),
     install_requires=[
         'pandas',
@@ -22,4 +22,5 @@ setuptools.setup(
         "Operating System :: OS Independent",
     ],
     python_requires='>=3.6',
+    test_suite="tests",
 )
