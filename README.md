@@ -62,12 +62,12 @@ python plot_tree.py
 sh test.sh
 ```
 
-| Name               | Stmts | Miss | Cover |
-|--------------------|-------|------|-------|
-| spell/__init__.py  | 0     | 0    | 100%  |
-| spell/spell.py     | 321   | 218  | 32%   |
-| test/test_spell.py | 55    | 1    | 98%   |
-| TOTAL              | 376   | 219  | 42%   |
+| Name                 | Stmts | Miss | Cover |
+|----------------------|-------|------|-------|
+| spell/__init__.py    | 0     | 0    | 100%  |
+| spellpy/spell.py     | 319   | 188  | 41%   |
+| test/test_spellpu.py | 65    | 1    | 98%   |
+| TOTAL                | 387   | 189  | 51%   |
 
 ## TODO
 
