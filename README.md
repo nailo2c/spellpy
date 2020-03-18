@@ -64,10 +64,10 @@ sh test.sh
 
 | Name                 | Stmts | Miss | Cover |
 |----------------------|-------|------|-------|
-| spell/__init__.py    | 0     | 0    | 100%  |
-| spellpy/spell.py     | 319   | 188  | 41%   |
-| test/test_spellpu.py | 65    | 1    | 98%   |
-| TOTAL                | 387   | 189  | 51%   |
+| spell/__init__.py    | 3     | 0    | 100%  |
+| spellpy/spell.py     | 319   | 174  | 45%   |
+| test/test_spellpu.py | 71    | 1    | 98%   |
+| TOTAL                | 393   | 175  | 55%   |
 
 ## TODO
 
