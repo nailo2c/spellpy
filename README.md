@@ -71,5 +71,5 @@ sh test.sh
 
 ## TODO
 
-- [ ] Refactor `spellpy.py`
+- [ ] Refactor `spell.py`
 - [ ] Test coverage

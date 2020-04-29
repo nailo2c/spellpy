@@ -34,6 +34,15 @@ class Node:
         self.childD = dict()
 
 
+class CustomUnpickler(pickle.Unpickler):
+    """CustomUnpickler is to prevent can't get attribute error when pickle load."""
+    def find_class(self, module, name):
+        try:
+            return super().find_class(__name__, name)
+        except AttributeError:
+            return super().find_class(module, name)
+
+
 class LogParser:
     """ LogParser class
     Attributes
@@ -193,9 +202,9 @@ class LogParser:
 
         if os.path.exists(rootNodePath) and os.path.exists(logCluLPath):
             with open(rootNodePath, 'rb') as f:
-                rootNode = pickle.load(f)
+                rootNode = CustomUnpickler(f).load()
             with open(logCluLPath, 'rb') as f:
-                logCluL = pickle.load(f)
+                logCluL = CustomUnpickler(f).load()
             self.lastestLineId = 0
             for logclust in logCluL:
                 if max(logclust.logIDL) > self.lastestLineId:
