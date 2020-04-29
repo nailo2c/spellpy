@@ -274,6 +274,9 @@ class LogParser:
         logging.info('Parsing done. [Time taken: {!s}]'.format(datetime.now() - starttime))
 
     def outputResult(self, logClustL):
+        if self.df_log.shape[0] == 0:
+            return
+
         templates = [0] * self.df_log.shape[0]
         ids = [0] * self.df_log.shape[0]
         df_event = []
@@ -394,6 +397,9 @@ class LogParser:
         raise Exception("TIME OUT!")
 
     def appendResult(self, logClustL):
+        if self.df_log.shape[0] == 0:
+            return
+
         main_structured_path = os.path.join(self.savePath, self.logmain+'_main_structured.csv')
         df_log_main_structured = pd.read_csv(main_structured_path)
         lastestLineId = df_log_main_structured['LineId'].max()

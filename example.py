@@ -15,6 +15,6 @@ if __name__ == '__main__':
     if not os.path.exists(output_dir):
         os.makedirs(output_dir)
 
-    for pwd in glob('./data/*'):
+    for pwd in glob(input_dir + '/*'):
         log_name = os.path.basename(pwd)
         parser.parse(log_name)
