@@ -35,7 +35,8 @@ class Node:
 
 
 class CustomUnpickler(pickle.Unpickler):
-    """CustomUnpickler is to prevent can't get attribute error when pickle load."""
+    """ CustomUnpickler is to prevent can't get attribute error when pickle load.
+    """
     def find_class(self, module, name):
         try:
             return super().find_class(__name__, name)
