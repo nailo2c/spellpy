@@ -44,7 +44,7 @@ class CustomUnpickler(pickle.Unpickler):
             return super().find_class(module, name)
 
 
-class LogParser:
+class LogParser(pickle.Unpickler):
     """ LogParser class
     Attributes
     ----------
@@ -53,7 +53,7 @@ class LogParser:
         savePath : the path of the output file
         tau : how much percentage of tokens matched to merge a log message
     """
-    def __init__(self, indir='./', outdir='./result/', log_format=None, tau=0.5, keep_para=True, text_max_length=4096, logmain=None):
+    def __init__(self, indir='./', outdir='./result/', log_format=None, tau=0.5, keep_para=True, text_max_length=4096, logmain=None, date_filter=''):
         self.path = indir
         self.logname = None
         self.logmain = logmain
@@ -64,6 +64,7 @@ class LogParser:
         self.keep_para = keep_para
         self.lastestLineId = 0
         self.text_max_length = text_max_length
+        self.date_filter = date_filter
 
     def LCS(self, seq1, seq2):
         lengths = [[0 for j in range(len(seq2)+1)] for i in range(len(seq1)+1)]
@@ -325,6 +326,9 @@ class LogParser:
                 if len(line) > self.text_max_length:
                     logging.error('Length of log string is too long')
                     logging.error(line)
+                    continue
+                if self.date_filter not in line:
+                    logging.warning(f'{date_filter} is not in {line}')
                     continue
                 signal.signal(signal.SIGALRM, self._log_to_dataframe_handler)
                 signal.alarm(1)
