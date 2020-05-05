@@ -328,7 +328,7 @@ class LogParser(pickle.Unpickler):
                     logging.error(line)
                     continue
                 if self.date_filter not in line:
-                    logging.warning(f'{self.date_filter} is not in {line}')
+                    # logging.warning(f'{self.date_filter} is not in {line}')
                     continue
                 signal.signal(signal.SIGALRM, self._log_to_dataframe_handler)
                 signal.alarm(1)
