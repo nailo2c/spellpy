@@ -2,7 +2,7 @@ import unittest
 import re
 import os
 import pandas as pd
-from pandas.util.testing import assert_frame_equal
+from pandas.testing import assert_frame_equal
 from spellpy.spell import LogParser, LCSObject, Node
 
 THIS_DIR = os.path.dirname(os.path.abspath(__file__))
