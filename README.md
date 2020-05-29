@@ -59,7 +59,7 @@ python plot_tree.py
 ## Tests
 
 ```sh
-sh test.sh
+sh test_coverage.sh
 ```
 
 | Name                 | Stmts | Miss | Cover |
@@ -69,7 +69,37 @@ sh test.sh
 | test/test_spellpu.py | 71    | 1    | 98%   |
 | TOTAL                | 393   | 175  | 55%   |
 
-## TODO
+## Folder Structure
 
-- [ ] Refactor `spell.py`
-- [ ] Test coverage
++ This tree structure is generate by mac terminal tool `tree` & copy paste it to `README.md`.
+
+   ```sh
+   tree -I "__pycache__|tmp.*" >> tmp.txt
+   ```
+
+```sh
+.
+├── LICENSE
+├── MANIFEST.in
+├── README.md
+├── data
+│   ├── empty_log.log
+│   ├── tiny_hdfs_1.log
+│   ├── tiny_hdfs_2.log
+│   └── tiny_hdfs_3.log
+├── example.py
+├── plot
+│   ├── tree.gv
+│   └── tree.gv.png
+├── plot_tree.py
+├── requirements.txt
+├── setup.cfg
+├── setup.py
+├── spellpy
+│   ├── __init__.py
+│   └── spell.py
+└── tests
+    ├── __init__.py
+    ├── test_data.log
+    └── test_spellpy.py
+```
