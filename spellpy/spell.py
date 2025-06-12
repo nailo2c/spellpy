@@ -407,7 +407,7 @@ class LogParser(pickle.Unpickler):
         main_structured_path = os.path.join(self.savePath, self.logmain+'_main_structured.csv')
         df_log_main_structured = pd.read_csv(main_structured_path)
         lastestLineId = df_log_main_structured['LineId'].max()
-        logging.info(f'lastestLindId: {lastestLineId}')
+        logging.info(f'lastestLineId: {lastestLineId}')
 
         templates = [0] * self.df_log.shape[0]
         ids = [0] * self.df_log.shape[0]
