@@ -94,6 +94,15 @@ class TestLogParser(unittest.TestCase):
         new_template = self.parser.getTemplate(lcs, seq)
         self.assertListEqual(new_template, expected_template)
 
+    def test_LCSMatch_duplicate_tokens(self):
+        seq = ['a'] * 76
+        logmessageL = ['a'] * 76
+        newCluster = LCSObject(logTemplate=logmessageL, logIDL=[0])
+
+        ret = self.parser.LCSMatch([newCluster], seq)
+        self.assertIsNotNone(ret)
+        self.assertListEqual(ret.logTemplate, newCluster.logTemplate)
+
 
 def helper(rootNode):
     if rootNode.childD == dict():
