@@ -94,6 +94,19 @@ class TestLogParser(unittest.TestCase):
         new_template = self.parser.getTemplate(lcs, seq)
         self.assertListEqual(new_template, expected_template)
 
+    def test_LCSMatch_with_repeated_tokens(self):
+        # This test case simulates the scenario described in the issue.
+        # 'seq' has many repeated tokens, which makes len(set(seq)) small.
+        # The old implementation would fail this test.
+        logmessageL = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J']
+        seq = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'K', 'K', 'K', 'K', 'K', 'K', 'K', 'K', 'K']
+        logID = 0
+        newCluster = LCSObject(logTemplate=logmessageL, logIDL=[logID])
+
+        retLogClust = self.parser.LCSMatch([newCluster], seq)
+        self.assertIsNotNone(retLogClust)
+        self.assertListEqual(retLogClust.logTemplate, newCluster.logTemplate)
+
 
 def helper(rootNode):
     if rootNode.childD == dict():
