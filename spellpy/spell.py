@@ -126,7 +126,7 @@ class LogParser(pickle.Unpickler):
         size_seq = len(seq)
         for LCSObject in LCSMap:
             set_template = set(LCSObject.logTemplate)
-            if len(set_seq & set_template) < 0.5 * size_seq:
+            if len(set_seq & set_template) < 0.5 * len(set_seq):
                 continue
             lcs = self.LCS(seq, LCSObject.logTemplate)
             if len(lcs) > maxLen or (len(lcs) == maxLen and len(LCSObject.logTemplate) < len(maxLCSObject.logTemplate)):
